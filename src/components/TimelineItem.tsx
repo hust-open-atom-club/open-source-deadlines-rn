@@ -1,7 +1,7 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
+import React, { useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { TimelineEvent } from '../lib/data';
-import { formatDeadline, formatTimelineDate } from '../lib/utils';
+import { formatTimelineDate } from '../lib/utils';
 
 export interface TimelineItemProps {
   event: TimelineEvent;
@@ -10,11 +10,18 @@ export interface TimelineItemProps {
   isUpcoming?: boolean;
   totalEvents: number;
   index: number;
+  onItemPress: (event: TimelineEvent, ref: React.RefObject<View>) => void;
 }
 
 export const TimelineItem = React.forwardRef<View, TimelineItemProps>(
-  ({ event, isEnded, isActive = false, isUpcoming = false, totalEvents, index }, ref) => {
-    const [modalVisible, setModalVisible] = useState(false);
+  ({ event, isEnded, isActive = false, isUpcoming = false, totalEvents, index, onItemPress }, ref) => {
+    const itemRef = useRef<View>(null);
+
+    const handlePress = () => {
+      if (!isEnded) {
+        onItemPress(event, itemRef);
+      }
+    };
 
     // Calculate the position on the timeline (from 10% to 90%)
     const position = totalEvents > 1 ? (index / (totalEvents - 1)) * 80 + 10 : 50;
@@ -26,17 +33,21 @@ export const TimelineItem = React.forwardRef<View, TimelineItemProps>(
     ];
 
     const dateStyle = [
-        styles.dateTextBase,
-        isActive ? styles.dateTextActive : styles.dateTextDefault,
-        isEnded && styles.ended,
+      styles.dateTextBase,
+      isActive ? styles.dateTextActive : styles.dateTextDefault,
+      isEnded && styles.ended,
     ];
 
     return (
-      <>
+      <View 
+        ref={itemRef}
+        style={[styles.container, { left: `${position}%` }]}
+      >
         <TouchableOpacity
-          style={[styles.container, { left: `${position}%` }]}
-          onPress={() => !isEnded && setModalVisible(true)}
+          style={styles.touchableArea}
+          onPress={handlePress}
           ref={ref as React.Ref<TouchableOpacity>}
+          activeOpacity={0.8}
         >
           <View style={dotStyle} />
           <View style={styles.dateContainer}>
@@ -45,31 +56,7 @@ export const TimelineItem = React.forwardRef<View, TimelineItemProps>(
             </Text>
           </View>
         </TouchableOpacity>
-
-        {/* Tooltip Modal */}
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => setModalVisible(false)}
-        >
-          <TouchableOpacity 
-            style={styles.modalOverlay} 
-            activeOpacity={1} 
-            onPressOut={() => setModalVisible(false)}
-          >
-            <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>{event.comment}</Text>
-              <Text style={styles.modalText}>
-                {formatDeadline(event.deadline)}
-              </Text>
-              <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
-                  <Text style={styles.closeButtonText}>关闭</Text>
-              </TouchableOpacity>
-            </View>
-          </TouchableOpacity>
-        </Modal>
-      </>
+      </View>
     );
   }
 );
@@ -79,8 +66,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignItems: 'center',
     top: '50%',
-    transform: [{ translateY: -12 }, { translateX: -12 }], // Center the touch area
-    padding: 6, // Increase touch area
+    transform: [{ translateY: -21 }], // Adjust to center dot + text
+  },
+  touchableArea: {
+    padding: 6,
+    alignItems: 'center',
   },
   dotBase: {
     width: 12,
@@ -121,46 +111,6 @@ const styles = StyleSheet.create({
   ended: {
     opacity: 0.5,
   },
-  // Modal Styles
-  modalOverlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    backgroundColor: '#1F2937', // bg-gray-800
-    borderRadius: 8,
-    padding: 16,
-    width: '80%',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  modalText: {
-    fontSize: 14,
-    color: '#D1D5DB', // text-gray-300
-    marginBottom: 16,
-    textAlign: 'center',
-  },
-  closeButton: {
-      backgroundColor: '#4B5563',
-      paddingVertical: 8,
-      paddingHorizontal: 16,
-      borderRadius: 6,
-  },
-  closeButtonText: {
-      color: '#FFFFFF',
-      fontWeight: 'bold',
-  }
 });
+
+

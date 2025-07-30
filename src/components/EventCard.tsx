@@ -1,17 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Linking,
-  ScrollView,
 } from 'react-native';
 import { Card, CardContent } from './ui/Card';
 import { Badge } from './ui/Badge';
 import { TimelineItem } from './TimelineItem';
 import { CountdownTimer } from './CountdownTimer';
-import { DeadlineItem, EventData, isEventEnded } from '../lib/data';
+import { DeadlineItem, EventData, isEventEnded, TimelineEvent } from '../lib/data';
 import { useEventStore } from '../lib/store';
 import { ScrollArea } from './ui/ScrollArea';
 import { Icon } from './Icon';
@@ -41,35 +40,65 @@ const CategoryBadge: React.FC<{ category: string }> = ({ category }) => {
   );
 };
 
+const Tooltip = ({ event, style }: { event: TimelineEvent; style: any }) => (
+  <View style={[styles.tooltipContainer, style]}>
+    <View style={styles.tooltipContent}>
+      <Text style={styles.tooltipTitle}>{event.comment}</Text>
+      <Text style={styles.tooltipText}>{formatDeadline(event.deadline)}</Text>
+    </View>
+    <View style={styles.tooltipArrow} />
+  </View>
+);
+
 export function EventCard({ item, event }: EventCardProps) {
   const { favorites, toggleFavorite } = useEventStore();
+  const [tooltip, setTooltip] = useState<{ event: TimelineEvent; style: any } | null>(null);
+  const timelineContainerRef = useRef<View>(null);
 
   const cardId = `${event.id}`;
   const isFavorited = favorites.includes(cardId);
-
   const ended = isEventEnded(event);
 
-  // 找到下一个截止日期
   const upcomingDeadlines = event.timeline
-    .map((t, index) => ({
-      ...t,
-      date: new Date(t.deadline),
-      index,
-    }))
+    .map((t, index) => ({ ...t, date: new Date(t.deadline), index }))
     .filter(t => t.date.getTime() > Date.now())
     .sort((a, b) => a.date.getTime() - b.date.getTime());
 
   const nextDeadline = upcomingDeadlines[0];
   const upcomingIndexes = upcomingDeadlines.map(t => t.index);
 
-  const handleLinkPress = () => {
-    Linking.openURL(event.link);
+  const handleLinkPress = () => Linking.openURL(event.link);
+
+  const handleTimelineItemPress = (
+    timelineEvent: TimelineEvent,
+    itemRef: React.RefObject<View>
+  ) => {
+    if (tooltip && tooltip.event.deadline === timelineEvent.deadline) {
+      setTooltip(null);
+      return;
+    }
+
+    if (itemRef.current && timelineContainerRef.current) {
+      itemRef.current.measureLayout(
+        timelineContainerRef.current,
+        (x, y, width, height) => {
+          setTooltip({
+            event: timelineEvent,
+            style: {
+              left: x + width / 2 - 110, // Center the tooltip (110 is half of tooltip width)
+              top: y - 100, // Position above the item
+            },
+          });
+        },
+        () => {}
+      );
+    }
   };
 
   return (
     <Card style={ended ? styles.endedCard : {}}>
       <CardContent>
-        {/* Main Content */}
+        {/* ... (rest of the card content is the same) ... */}
         <View style={styles.mainContent}>
           {/* Title Section */}
           <View style={styles.titleSection}>
@@ -125,7 +154,7 @@ export function EventCard({ item, event }: EventCardProps) {
             <Icon name="Clock" style={styles.icon} />
             <Text style={styles.sectionTitle}>时间线</Text>
           </View>
-          <View style={styles.timelineContainer}>
+          <View style={styles.timelineContainer} ref={timelineContainerRef}>
             <ScrollArea>
               <View style={[styles.timeline, { width: event.timeline.length * 80 }]}>
                 <View style={styles.timelineTrack} />
@@ -138,10 +167,12 @@ export function EventCard({ item, event }: EventCardProps) {
                     isUpcoming={upcomingIndexes.slice(1).includes(index)}
                     totalEvents={event.timeline.length}
                     index={index}
+                    onItemPress={handleTimelineItemPress}
                   />
                 ))}
               </View>
             </ScrollArea>
+            {tooltip && <Tooltip event={tooltip.event} style={tooltip.style} />}
           </View>
         </View>
 
@@ -224,6 +255,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FAFB',
     height: 80,
     justifyContent: 'center',
+    // overflow: 'hidden' is removed to allow tooltip to show
   },
   timeline: {
     position: 'relative',
@@ -238,6 +270,45 @@ const styles = StyleSheet.create({
     height: 2,
     backgroundColor: '#D1D5DB',
     top: '50%',
+  },
+  // Tooltip Styles
+  tooltipContainer: {
+    position: 'absolute',
+    zIndex: 10,
+    width: 220,
+  },
+  tooltipContent: {
+    backgroundColor: '#1F2937',
+    borderRadius: 8,
+    padding: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  tooltipArrow: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 8,
+    borderRightWidth: 8,
+    borderTopWidth: 8,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderTopColor: '#1F2937',
+    alignSelf: 'center',
+  },
+  tooltipTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  tooltipText: {
+    fontSize: 14,
+    color: '#D1D5DB',
+    textAlign: 'center',
   },
   countdownSection: { marginTop: 24 },
   countdownBox: {
@@ -264,3 +335,4 @@ const styles = StyleSheet.create({
   endedTitle: { fontSize: 14, fontWeight: 'bold', color: '#4B5563' },
   endedSubtitle: { fontSize: 12, color: '#6B7280', marginTop: 4 },
 });
+
