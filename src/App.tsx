@@ -76,17 +76,16 @@ function App(): JSX.Element {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
+          <Section title="步骤1">
+            编辑 <Text style={styles.highlight}>App.tsx</Text> 以更改此屏幕，然后返回以查看您的编辑。
           </Section>
-          <Section title="See Your Changes">
+          <Section title="查看更改">
             <ReloadInstructions />
           </Section>
-          <Section title="Debug">
+          <Section title="调试">
             <DebugInstructions />
           </Section>
-          <Section title="Learn More">
+          <Section title="了解更多">
             Read the docs to discover what to do next:
           </Section>
           <LearnMoreLinks />
