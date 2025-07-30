@@ -15,6 +15,7 @@ import { DeadlineItem, EventData, isEventEnded } from '../lib/data';
 import { useEventStore } from '../lib/store';
 import { ScrollArea } from './ui/ScrollArea';
 import { Icon } from './Icon';
+import { formatDeadline } from '../lib/utils';
 
 interface EventCardProps {
   item: DeadlineItem;
@@ -152,7 +153,7 @@ export function EventCard({ item, event }: EventCardProps) {
                 <Text style={styles.countdownTitle}>下一个截止日期</Text>
                 <Text style={styles.countdownComment}>{nextDeadline.comment}</Text>
                 <Text style={styles.countdownDate}>
-                  {new Date(nextDeadline.deadline).toLocaleString()}
+                  {formatDeadline(nextDeadline.deadline)}
                 </Text>
               </View>
               <CountdownTimer deadline={nextDeadline.deadline} />

@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 import { TimelineEvent } from '../lib/data';
+import { formatDeadline, formatTimelineDate } from '../lib/utils';
 
 export interface TimelineItemProps {
   event: TimelineEvent;
@@ -9,19 +10,6 @@ export interface TimelineItemProps {
   isUpcoming?: boolean;
   totalEvents: number;
   index: number;
-}
-
-// Helper to format date to MM-dd
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
-  return `${month}-${day}`;
-};
-
-const formatDateTime = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleString();
 }
 
 export const TimelineItem = React.forwardRef<View, TimelineItemProps>(
@@ -53,7 +41,7 @@ export const TimelineItem = React.forwardRef<View, TimelineItemProps>(
           <View style={dotStyle} />
           <View style={styles.dateContainer}>
             <Text style={dateStyle}>
-              {formatDate(event.deadline)}
+              {formatTimelineDate(event.deadline)}
             </Text>
           </View>
         </TouchableOpacity>
@@ -73,7 +61,7 @@ export const TimelineItem = React.forwardRef<View, TimelineItemProps>(
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle}>{event.comment}</Text>
               <Text style={styles.modalText}>
-                {formatDateTime(event.deadline)}
+                {formatDeadline(event.deadline)}
               </Text>
               <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
                   <Text style={styles.closeButtonText}>关闭</Text>
