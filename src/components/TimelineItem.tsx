@@ -94,7 +94,8 @@ const styles = StyleSheet.create({
   dateContainer: {
     position: 'absolute',
     top: '100%',
-    marginTop: 4,
+    marginTop: 16,
+    minWidth: 40, // Ensure enough space for MM-DD format
   },
   dateTextBase: {
     fontSize: 12,

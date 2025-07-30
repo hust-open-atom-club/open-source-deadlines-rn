@@ -46,13 +46,13 @@ const Tooltip = ({ event, style }: { event: TimelineEvent; style: any }) => (
       <Text style={styles.tooltipTitle}>{event.comment}</Text>
       <Text style={styles.tooltipText}>{formatDeadline(event.deadline)}</Text>
     </View>
-    <View style={styles.tooltipArrow} />
   </View>
 );
 
 export function EventCard({ item, event }: EventCardProps) {
   const { favorites, toggleFavorite } = useEventStore();
   const [tooltip, setTooltip] = useState<{ event: TimelineEvent; style: any } | null>(null);
+  const [containerWidth, setContainerWidth] = useState(0);
   const timelineContainerRef = useRef<View>(null);
 
   const cardId = `${event.id}`;
@@ -82,10 +82,19 @@ export function EventCard({ item, event }: EventCardProps) {
       itemRef.current.measureLayout(
         timelineContainerRef.current,
         (x, y, width, height) => {
+          const tooltipWidth = 220; // As defined in styles
+          const initialLeft = x + width / 2 - tooltipWidth / 2;
+
+          // Clamp the position to be within the container bounds
+          const clampedLeft = Math.max(
+            2, // Left padding
+            Math.min(initialLeft, containerWidth - tooltipWidth - 2) // Right padding
+          );
+
           setTooltip({
             event: timelineEvent,
             style: {
-              left: x + width / 2 - 110, // Center the tooltip (110 is half of tooltip width)
+              left: clampedLeft,
               top: y - 100, // Position above the item
             },
           });
@@ -154,7 +163,11 @@ export function EventCard({ item, event }: EventCardProps) {
             <Icon name="Clock" style={styles.icon} />
             <Text style={styles.sectionTitle}>时间线</Text>
           </View>
-          <View style={styles.timelineContainer} ref={timelineContainerRef}>
+          <View 
+            style={styles.timelineContainer} 
+            ref={timelineContainerRef}
+            onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}
+          >
             <ScrollArea>
               <View style={[styles.timeline, { width: event.timeline.length * 80 }]}>
                 <View style={styles.timelineTrack} />
@@ -286,17 +299,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-  },
-  tooltipArrow: {
-    width: 0,
-    height: 0,
-    borderLeftWidth: 8,
-    borderRightWidth: 8,
-    borderTopWidth: 8,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderTopColor: '#1F2937',
-    alignSelf: 'center',
   },
   tooltipTitle: {
     fontSize: 16,
