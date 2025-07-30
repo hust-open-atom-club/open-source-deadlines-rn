@@ -5,7 +5,7 @@ import { Input } from './ui/Input';
 import { Switch } from './ui/Switch';
 import { Label } from './ui/Label';
 import { Button } from './ui/Button';
-import { Icon } from './Icon';
+import { Lucide } from '@react-native-vector-icons/lucide';
 
 const categoryTranslations: { [key: string]: string } = {
   conference: '会议',
@@ -56,7 +56,7 @@ export function FilterBar() {
     <View style={styles.container}>
       {/* Search */}
       <View style={styles.searchContainer}>
-        <Icon name="Search" style={styles.searchIcon} />
+        <Lucide name="search" style={styles.searchIcon} />
         <Input
           placeholder="搜索活动、标签或地点..."
           value={searchQuery}
@@ -73,7 +73,7 @@ export function FilterBar() {
         />
         <Label>
           <View style={styles.favoritesLabel}>
-            <Icon name="Star" style={styles.starIcon} />
+            <Lucide name="star" style={styles.starIcon} />
             <Text>只显示收藏</Text>
           </View>
         </Label>

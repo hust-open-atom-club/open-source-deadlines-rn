@@ -13,7 +13,7 @@ import { CountdownTimer } from './CountdownTimer';
 import { DeadlineItem, EventData, isEventEnded, TimelineEvent } from '../lib/data';
 import { useEventStore } from '../lib/store';
 import { ScrollArea } from './ui/ScrollArea';
-import { Icon } from './Icon';
+import { Lucide } from '@react-native-vector-icons/lucide';
 import { formatDeadline } from '../lib/utils';
 
 interface EventCardProps {
@@ -115,15 +115,15 @@ export function EventCard({ item, event }: EventCardProps) {
               <CategoryBadge category={item.category} />
               <TouchableOpacity onPress={handleLinkPress} style={styles.titleLink}>
                 <Text style={styles.titleText}>{item.title}</Text>
-                <Icon name="ExternalLink" style={styles.icon} />
+                <Lucide name="external-link" style={styles.icon} />
               </TouchableOpacity>
             </View>
             <View style={styles.titleBadges}>
               <Badge variant="outline">{String(event.year)}</Badge>
               {ended && <Badge variant="secondary">已结束</Badge>}
               <TouchableOpacity onPress={() => toggleFavorite(cardId)}>
-                <Icon
-                  name="Star"
+                <Lucide
+                  name="star"
                   style={[styles.icon, isFavorited && styles.favoritedIcon]}
                 />
               </TouchableOpacity>
@@ -143,15 +143,15 @@ export function EventCard({ item, event }: EventCardProps) {
           {/* Info Section */}
           <View style={styles.infoSection}>
             <View style={styles.infoItem}>
-              <Icon name="Calendar" style={styles.icon} />
+              <Lucide name="calendar" style={styles.icon} />
               <Text style={styles.infoText}>{event.date}</Text>
             </View>
             <View style={styles.infoItem}>
-              <Icon name="Clock" style={styles.icon} />
+              <Lucide name="clock" style={styles.icon} />
               <Text style={styles.infoText}>{event.timezone}</Text>
             </View>
             <View style={styles.infoItem}>
-              <Icon name="MapPin" style={styles.icon} />
+              <Lucide name="map-pin" style={styles.icon} />
               <Text style={styles.infoText}>{event.place}</Text>
             </View>
           </View>
@@ -160,7 +160,7 @@ export function EventCard({ item, event }: EventCardProps) {
         {/* Mobile Layout for Timeline and Deadline */}
         <View style={styles.mobileTimelineSection}>
           <View style={styles.timelineHeader}>
-            <Icon name="Clock" style={styles.icon} />
+            <Lucide name="clock" style={styles.icon} />
             <Text style={styles.sectionTitle}>时间线</Text>
           </View>
           <View 

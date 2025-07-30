@@ -16,7 +16,7 @@ import { useEventStore } from './lib/store';
 import { DeadlineItem, EventData } from './lib/data';
 import { EventCard } from './components/EventCard';
 import { FilterBar } from './components/FilterBar';
-import { Icon } from './components/Icon';
+import { Lucide } from '@react-native-vector-icons/lucide'
 
 interface FlatEvent {
   item: DeadlineItem;
@@ -28,7 +28,7 @@ const AppHeader = () => (
   <View style={styles.headerContainer}>
     <View style={styles.headerTitleRow}>
       <View style={styles.headerIconContainer}>
-        <Icon name="Calendar" style={styles.headerIcon} />
+        <Lucide name="calendar" style={styles.headerIcon} />
       </View>
       <Text style={styles.headerTitle}>开源活动截止日期</Text>
     </View>
