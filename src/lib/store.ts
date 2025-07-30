@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { DeadlineItem } from './data';
-// import { persist, createJSONStorage } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface AppState {
@@ -29,7 +29,7 @@ interface AppState {
 }
 
 export const useEventStore = create<AppState>()(
-  // persist(
+  persist(
     (set) => ({
       // State
       items: [],
@@ -93,18 +93,18 @@ export const useEventStore = create<AppState>()(
 
       setSearchQuery: (query) => set({ searchQuery: query }),
     }),
-  //   {
-  //     name: 'favorites-storage',
-  //     storage: createJSONStorage(() => AsyncStorage), // 使用 AsyncStorage
-  //     partialize: (state) => ({
-  //       favorites: state.favorites,
-  //       // displayTimezone: state.displayTimezone // 保存用户选择的时区
-  //     }),
-  //     onRehydrateStorage: () => (state) => {
-  //       if (state) {
-  //         state.mounted = true;
-  //       }
-  //     },
-  //   }
-  // )
+    {
+      name: 'favorites-storage',
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({ 
+        favorites: state.favorites,
+        // displayTimezone: state.displayTimezone // 保存用户选择的时区
+      }),
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          state.mounted = true
+        }
+      }
+    }
+  )
 );
