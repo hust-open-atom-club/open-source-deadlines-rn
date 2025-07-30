@@ -44,7 +44,7 @@ const AppHeader = () => (
       开源会议、竞赛和活动重要截止日期概览，不再错过为社区贡献、学习和交流的机会。
     </Text>
     <Text style={styles.disclaimer}>
-      *免责声明：本站数据由人工维护，仅供参考
+      *免责声明：数据由人工维护，仅供参考
     </Text>
   </View>
 );
@@ -53,10 +53,6 @@ const AppFooter = () => (
     <View style={styles.footer}>
         <Text style={styles.footerText}>
             使用 React Native 构建 • 由{' '}
-            <Text style={styles.link} onPress={() => Linking.openURL('https://github.com/inscripoem')}>
-                inscripoem
-            </Text>
-            {' '}开发 • 由{' '}
             <Text style={styles.link} onPress={() => Linking.openURL('https://hust.openatom.club')}>
                 华科开放原子开源俱乐部
             </Text>
@@ -75,7 +71,7 @@ const EmptyListComponent = () => (
   </View>
 );
 
-function App(): JSX.Element {
+function App(): React.ReactElement {
   const {
     items,
     loading,
