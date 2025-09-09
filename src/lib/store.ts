@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { DeadlineItem } from './data';
 import { persist, createJSONStorage } from 'zustand/middleware';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface AppState {
   items: DeadlineItem[];
@@ -95,7 +95,8 @@ export const useEventStore = create<AppState>()(
     }),
     {
       name: 'favorites-storage',
-      storage: createJSONStorage(() => localStorage),
+      // localStorage 是一个浏览器 Web API，RN 中应使用 AsyncStorage
+      storage: createJSONStorage(() => AsyncStorage),
       partialize: (state) => ({ 
         favorites: state.favorites,
         // displayTimezone: state.displayTimezone // 保存用户选择的时区
