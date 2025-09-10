@@ -67,8 +67,9 @@ export function EventCard({ item, event }: EventCardProps) {
   const nextDeadline = upcomingDeadlines[0];
   const upcomingIndexes = upcomingDeadlines.map(t => t.index);
 
+  // Jumping to browser is handled here
   const handleLinkPress = () => Linking.openURL(event.link);
-
+  
   const handleTimelineItemPress = (
     timelineEvent: TimelineEvent,
     itemRef: React.RefObject<View>
@@ -113,10 +114,12 @@ export function EventCard({ item, event }: EventCardProps) {
           <View style={styles.titleSection}>
             <View style={styles.titleHeader}>
               <CategoryBadge category={item.category} />
+
               <TouchableOpacity onPress={handleLinkPress} style={styles.titleLink}>
                 <Text style={styles.titleText}>{item.title}</Text>
                 <Lucide name="external-link" style={styles.icon} />
               </TouchableOpacity>
+
             </View>
             <View style={styles.titleBadges}>
               <Badge variant="outline">{String(event.year)}</Badge>
