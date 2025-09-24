@@ -116,8 +116,10 @@ export function EventCard({ item, event }: EventCardProps) {
               <CategoryBadge category={item.category} />
 
               <TouchableOpacity onPress={handleLinkPress} style={styles.titleLink}>
-                <Text style={styles.titleText}>{item.title}</Text>
-                <Lucide name="external-link" style={styles.icon} />
+                <Text style={styles.titleText}>
+                  {item.title}
+                </Text>
+                <Lucide name="external-link" style={[styles.icon, styles.iconNoShrink]} />
               </TouchableOpacity>
 
             </View>
@@ -251,8 +253,8 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: 'white',
   },
-  titleLink: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  titleText: { fontSize: 20, fontWeight: '600', textDecorationLine: 'underline' },
+  titleLink: { flexDirection: 'row', alignItems: 'center', gap: 4, flexShrink: 1, minWidth: 0, maxWidth: '100%', flex: 1, flexWrap: 'wrap', width: '100%' },
+  titleText: { fontSize: 20, fontWeight: '600', textDecorationLine: 'underline', flexShrink: 1, minWidth: 0, flexBasis: 'auto', flexGrow: 1 },
   titleBadges: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   description: { fontSize: 14, color: '#6B7280', lineHeight: 20 },
   tagsContainer: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
@@ -260,6 +262,7 @@ const styles = StyleSheet.create({
   infoItem: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   infoText: { fontSize: 14, color: '#6B7280' },
   icon: { fontSize: 16, color: '#6B7280' },
+  iconNoShrink: { flexShrink: 0 },
   favoritedIcon: { color: '#FBBF24' },
   mobileTimelineSection: { gap: 12, marginTop: 24 },
   timelineHeader: { flexDirection: 'row', alignItems: 'center', gap: 8 },

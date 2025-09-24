@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
 import {
-  SafeAreaView,
   StatusBar,
   StyleSheet,
   Text,
@@ -166,8 +165,8 @@ function App(): React.ReactElement {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle={'dark-content'} />
+    <View style={styles.root}>
+  <StatusBar barStyle={'dark-content'} backgroundColor="#F3F4F6" translucent={false} />
       <FlatList
         data={filteredEvents}
         keyExtractor={({ event }) => event.id}
@@ -187,13 +186,15 @@ function App(): React.ReactElement {
         ListFooterComponent={filteredEvents.length > 0 ? <AppFooter /> : null}
         ListEmptyComponent={EmptyListComponent}
         contentContainerStyle={styles.listContentContainer}
+        style={styles.list}
+        contentInsetAdjustmentBehavior="never"
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
+  root: {
     flex: 1,
     backgroundColor: '#F3F4F6', // slate-100
   },
@@ -211,6 +212,9 @@ const styles = StyleSheet.create({
   listContentContainer: {
     paddingHorizontal: 16,
     paddingVertical: 8,
+  },
+  list: {
+    backgroundColor: '#F3F4F6',
   },
   headerContainer: {
     marginBottom: 16,
