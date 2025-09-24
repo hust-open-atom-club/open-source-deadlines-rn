@@ -19,8 +19,10 @@ npm run harmony
 
 
 # todo
-- 完善持久化，引入 @react-native-async-storage/async-storage。
-- fuse.js在中文搜索时卡死
+
+- [x] 完善持久化，引入 @react-native-async-storage/async-storage。
+
+- [x] ~~fuse.js在中文搜索时卡死~~ 实机没有问题
 
 
 # ref
