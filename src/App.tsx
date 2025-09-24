@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
 import {
-  SafeAreaView,
   StatusBar,
   StyleSheet,
   Text,
@@ -10,7 +9,6 @@ import {
   TouchableOpacity,
   Linking,
   Image,
-  Platform,
 } from 'react-native';
 import Fuse from 'fuse.js';
 import { useEventStore } from './lib/store';
@@ -167,7 +165,7 @@ function App(): React.ReactElement {
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <View style={styles.root}>
   <StatusBar barStyle={'dark-content'} backgroundColor="#F3F4F6" translucent={false} />
       <FlatList
         data={filteredEvents}
@@ -191,12 +189,12 @@ function App(): React.ReactElement {
         style={styles.list}
         contentInsetAdjustmentBehavior="never"
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
+  root: {
     flex: 1,
     backgroundColor: '#F3F4F6', // slate-100
   },
