@@ -69,3 +69,11 @@ android
 __tests__
 ios
 __target_references__
+
+!harmony/
+!harmony/entry/
+!harmony/entry/src/
+!harmony/entry/src/main/
+!harmony/entry/src/main/resources/
+!harmony/entry/src/main/resources/rawfile/
+!harmony/entry/src/main/resources/rawfile/**
